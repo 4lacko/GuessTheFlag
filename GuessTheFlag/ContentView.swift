@@ -21,6 +21,17 @@ struct ContentView: View {
     @State private var totalRounds = 5
     @State private var gameRound = 0
     
+    struct FlagImage: View {
+        var country: String
+        
+        var body: some View {
+            Image(country)
+                .renderingMode(.original)
+                .clipShape(Capsule())
+                .shadow(radius: 5)
+        }
+    }
+    
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [.blue, .black]), startPoint: .top, endPoint: .bottom)
@@ -41,10 +52,7 @@ struct ContentView: View {
                     Button {
                         flagTapped(number)
                     } label: {
-                        Image(countries[number])
-                            .renderingMode(.original)
-                            .clipShape(Capsule())
-                            .shadow(radius: 5)
+                        FlagImage(country: countries[number])
                     }
                 }
             }
