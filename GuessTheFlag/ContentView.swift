@@ -21,6 +21,10 @@ struct ContentView: View {
     @State private var totalRounds = 5
     @State private var gameRound = 0
     
+    @State private var correctFlag = 0
+    @State private var animationAmount = 0.0
+    @State private var opacityAmount = 1.0
+    
     struct FlagImage: View {
         var country: String
         
@@ -51,9 +55,21 @@ struct ContentView: View {
                 ForEach(0..<3) { number in
                     Button {
                         flagTapped(number)
+      
+                        if correctFlag == number {
+                            withAnimation {
+                                animationAmount += 360
+                                opacityAmount -= 0.5
+                            }
+                        } else {
+                            opacityAmount -= 0.5
+                        }
+                        
                     } label: {
                         FlagImage(country: countries[number])
                     }
+                    .rotation3DEffect(.degrees(correctFlag == number ? animationAmount : 0), axis: (x: 0, y: 1, z: 0))
+                    .opacity((correctFlag != number) ? opacityAmount : 1.0)
                 }
             }
         }
@@ -71,6 +87,7 @@ struct ContentView: View {
     
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
+            correctFlag = number
             scoreTitle = "Correct"
             score += 1
         } else {
@@ -88,6 +105,7 @@ struct ContentView: View {
         } else {
             countries.shuffle()
             correctAnswer = Int.random(in: 0...2)
+            opacityAmount = 1.0
         }
     }
     
@@ -96,6 +114,7 @@ struct ContentView: View {
         score = 0
         gameRound = 0
         gameOver = false
+        opacityAmount = 1.0
     }
 }
 
